@@ -1,4 +1,5 @@
 from src.core.rest_job import RestJob
+from src.config import config
 
 
 class IdealistBaseJob(RestJob):
@@ -8,9 +9,9 @@ class IdealistBaseJob(RestJob):
         return 'IDEALIST'
 
     @property
-    def url(self):
-        return 'https://www.idealist.org/api/v1'
+    def auth(self):
+        return (config.idealist_token, '')
 
     @property
-    def auth(self):
-        return ('', '')
+    def url(self):
+        return 'https://www.idealist.org/api/v1'

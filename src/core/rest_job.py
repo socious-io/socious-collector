@@ -4,7 +4,7 @@ import requests
 class RestJob:
 
     def __init__(self):
-        self.rows = None
+        self.data = None
 
     @property
     def url(self):
@@ -12,7 +12,7 @@ class RestJob:
 
     @property
     def path(self):
-        return None
+        return ''
 
     @property
     def auth(self):
@@ -26,8 +26,8 @@ class RestJob:
     def method(self):
         return 'GET'
 
-    def dispatch(self, queue, data):
-        print(queue, ' ---- > ', data)
+    def mak_full_url(self):
+        return '%s%s' % (self.url, self.path)
 
     @property
     def proxies(self):
@@ -35,11 +35,14 @@ class RestJob:
                     https='socks5://localhost:1090')
 
     def request(self):
-        url = '%s%s' % (self.url, self.path)
+        url = self.mak_full_url()
         return requests.request(self.method, url, auth=self.auth, headers=self.headers, proxies=self.proxies)
 
     def fetch(self):
         response = self.request()
-        self.rows = self.filter_result(response.json())
         if (response.status_code >= 400):
-            raise Exception('response error %s' % str(response.text))
+            url = self.mak_full_url()
+            raise Exception('response error url=%s  response=%s with status %d' %
+                            (url, str(response.text), response.status_code))
+
+        self.data = response.json()

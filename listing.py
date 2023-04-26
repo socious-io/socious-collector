@@ -1,14 +1,15 @@
 import asyncio
-from src.services.idealist.jobs import IdealistListingJob
+from src.jobs.listings import ListingWorker
 
 
-job = IdealistListingJob()
+worker = ListingWorker()
+
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
 
     try:
-        loop.run_until_complete(job.execute())
+        loop.run_until_complete(worker.run())
     except KeyboardInterrupt:
         pass
     finally:

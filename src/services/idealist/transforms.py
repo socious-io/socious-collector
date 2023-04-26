@@ -1,10 +1,10 @@
 
-def job_list_transformer(row: dict) -> dict:
+def job_transformer(row: dict) -> dict:
     """ const paymentType = await getPaymentType(row)
     const remotePreference = await getRemotePreference(row)
 
     const experienceLevel = await getExperienceLevel(row) """
-    print(row)
+    # print(row.get('org'), '&&&&&&&&&&&&&&&&&&&&')
     return {
         'title': row.get('name'),
         'description': row.get('description') or 'No information',
