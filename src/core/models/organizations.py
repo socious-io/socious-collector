@@ -3,11 +3,11 @@ from src.core.db import DB
 from .consts import *
 
 
-class JobsEntity(BaseEntity):
+class OrganizationEntity(BaseEntity):
 
     @property
     def fetch_query_name(self):
-        return 'get_job'
+        return 'get_org'
 
     @property
     def fetch_query_params(self):
@@ -16,27 +16,20 @@ class JobsEntity(BaseEntity):
 
     @property
     def sync_query_name(self):
-        return 'upsert_job'
+        return 'upsert_org'
 
     @property
     def columns(self) -> tuple:
         return (
             'id',
-            'identity_id',
-            'title',
-            'description',
-            'remote_preference',
-            'payment_type',
-            'payment_scheme',
-            'payment_currency',
-            'payment_range_lower',
-            'payment_range_upper',
-            'experience_level',
-            'status',
+            'name',
+            'bio',
+            'shortname',
+            'type',
+            'address',
             'country',
             'city',
             'other_party_id',
             'other_party_title',
             'other_party_url',
-            'updated_at'
         )
