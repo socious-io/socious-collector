@@ -1,3 +1,4 @@
+import asyncio
 
 
 def ListingsJob(Base):
@@ -7,6 +8,10 @@ def ListingsJob(Base):
         def __init__(self) -> None:
             super().__init__()
             self.rows = None
+
+        @property
+        def runner_timeout(self):
+            return 10
 
         @property
         def job_name(self):
@@ -30,11 +35,15 @@ def ListingsJob(Base):
                 row = self.pre_process(row)
                 transformed = self.transformer(row)
                 await self.dispatch(self.job_name, transformed)
-                break
 
         async def execute(self):
             self.fetch()
             self.rows = self.filter_result(self.data)
             await self.process()
+
+        async def run(self):
+            while True:
+                await self.execute()
+                await asyncio.sleep(self.runner_timeout)
 
     return Job

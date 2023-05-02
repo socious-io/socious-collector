@@ -1,16 +1,21 @@
 import asyncio
 import json
+from copy import deepcopy
 from nats.aio.client import Client as NATS
 from nats.aio.errors import ErrTimeout
 from src.config import config
 
 
-def Worker(Base):
+def Queue(Base):
 
     class Q(Base):
         def __init__(self):
             self.row = {}
             self.nc = NATS()
+
+        @property
+        def worker_count(self):
+            return 3
 
         @property
         def name(self):
@@ -46,7 +51,7 @@ def Worker(Base):
         async def handler(self, msg):
             subject = msg.subject
             self.row = json.loads(msg.data.decode())
-            print(f"Received a message on '{subject}': {self.row}")
+            print(f"Received a message on '{subject}': {self.get_id()}")
             await self.execute()
 
         def transformer(self, row):
@@ -64,7 +69,7 @@ def Worker(Base):
             self.fetch()
             await self.process()
 
-        async def run(self):
+        async def worker(self):
             await self.connect()
             await self.subscribe()
 
@@ -75,4 +80,8 @@ def Worker(Base):
 
             while True:
                 await asyncio.sleep(1)
+
+        async def run(self):
+            await asyncio.gather(*(deepcopy(self).worker() for _ in range(self.worker_count)))
+
     return Q

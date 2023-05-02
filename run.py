@@ -1,15 +1,23 @@
 import asyncio
-from src.services.idealist.jobs import IdealistListingJob
+import importlib
+from src.config import config
 
 
-job = IdealistListingJob()
+async def main():
+    JOBS = []
+    for service in config.services:
+        module = importlib.import_module('src.services.%s' % service)
+        if 'JOBS' not in dir(module):
+            continue
+        JOBS += [j.run() for j in module.JOBS]
+        print('%s job has been start!' % service)
 
-if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
+    # Run multiple NATS listeners.
+    await asyncio.gather(*JOBS)
 
+
+if __name__ == "__main__":
     try:
-        loop.run_until_complete(job.execute())
+        asyncio.run(main())
     except KeyboardInterrupt:
         pass
-    finally:
-        loop.close()

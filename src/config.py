@@ -13,9 +13,14 @@ class Config:
         self.nats_url = os.environ.get('NATS_URL')
         self.database_url = os.environ.get('DATABASE_URL')
         self.sql_dir = os.path.join(os.getcwd(), 'src/core/sql')
+        self.http_proxy = dict(
+            http=os.environ.get('HTTP_PROXY'),
+            https=os.environ.get('HTTP_PROXY')
+        )
         # Load settings from the configuration file
         config = ConfigParser()
         config.read("config.ini")
+        self.services = config['core']['services'].split(',')
 
 
 # Initialize a global configuration object

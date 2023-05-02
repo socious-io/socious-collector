@@ -44,17 +44,6 @@ def get_experience_level(row):
 
 
 def get_org_shortname(row):
-    url = row.get('url', {}).get('en', None)
-
-    if url:
-        domain = urlparse(url)
-        splited = domain.netloc.split('.')
-        if len(splited) == 2:
-            return splited[0]
-        if len(splited) == 3:
-            return splited[1]
-        return ''.join(splited)
-
     match = re.search(r'\(?([0-9A-Za-z]+)\)?', row.get('name', ''))
     return '%s%d' % (match.group(1), randint(1000, 9999))
 

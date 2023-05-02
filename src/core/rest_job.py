@@ -1,4 +1,5 @@
 import requests
+from src.config import config
 
 
 class RestJob:
@@ -31,8 +32,9 @@ class RestJob:
 
     @property
     def proxies(self):
-        return dict(http='socks5://localhost:1090',
-                    https='socks5://localhost:1090')
+        if not config.http_proxy.get('https') or not config.http_proxy.get('http'):
+            return None
+        return config.http_proxy
 
     def request(self):
         url = self.mak_full_url()

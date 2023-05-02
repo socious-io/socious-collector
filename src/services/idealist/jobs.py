@@ -1,44 +1,46 @@
 from src.core.listings import ListingsJob
-from src.core.worker import Worker
-from ..idealist import IdealistBaseJob
+from src.core.queues import Queue
+from .base import IdealistBaseJob
 from .transforms import job_transformer
-from src.jobs.listings import ListingWorker
+from src.services.socious.listings import ListingWorker
 
 
 class IdealistListingJob(ListingsJob(IdealistBaseJob)):
 
-    def __init__(self) -> None:
+    def __init__(self, project_type) -> None:
         super().__init__()
-        self.queue = IdealistRowQueue()
+        self.queue = IdealistRowQueue(project_type)
+        self.project_type = project_type
 
     @property
     def path(self):
-        return '/listings/jobs'
+        return '/listings/%s' % self.project_type
 
     def filter_result(self, result):
-        return result['jobs']
+        return result[self.project_type]
 
 
-class IdealistRowQueue(Worker(IdealistBaseJob)):
+class IdealistRowQueue(Queue(IdealistBaseJob)):
 
-    def __init__(self):
+    def __init__(self, project_type):
         super().__init__()
         self.queue = ListingWorker()
+        self.project_type = project_type
 
     @property
     def name(self):
-        return 'IDEALIST.Listings'
+        return 'IDEALIST.Listings.%s' % self.project_type
 
     @property
     def path(self):
-        return '/listings/jobs/%s' % self.get_id()
+        return '/listings/%s/%s' % (self.project_type, self.get_id())
 
     def filter_result(self, result):
-        return result['job']
+        return result[self.project_type[:-1]]
 
     @property
     def subject(self):
-        return 'listing'
+        return 'IDEALIST.Listings.%s' % self.project_type
 
     def transformer(self, row):
         return job_transformer(row)

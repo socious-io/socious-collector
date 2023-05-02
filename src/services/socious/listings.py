@@ -1,10 +1,10 @@
-from src.core.worker import Worker
+from src.core.queues import Queue
 from src.core.models.jobs import JobsEntity
 from src.core.models.organizations import OrganizationEntity
 from src.core.models.media import MediaEntity
 
 
-class ListingWorker(Worker(object)):
+class ListingWorker(Queue(object)):
     @property
     def name(self):
         return 'listings'
@@ -12,6 +12,9 @@ class ListingWorker(Worker(object)):
     @property
     def subject(self):
         return 'listings'
+
+    def get_id(self):
+        return self.row.get('other_party_id')
 
     async def execute(self):
         org = self.row.get('org')

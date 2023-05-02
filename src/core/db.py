@@ -38,10 +38,14 @@ class Database:
 
     def execute(self, query, params=None):
         with self.conn.cursor() as cur:
-            cur.execute(query, params)
-            self.conn.commit()
-            results = cur.fetchall()
-            return self.result_to_dict(cur, results)
+            try:
+                cur.execute(query, params)
+                self.conn.commit()
+                results = cur.fetchall()
+                return self.result_to_dict(cur, results)
+            except Exception as e:
+                self.conn.rollback()
+                raise e
 
     def fetch(self, query, params=None):
         with self.conn.cursor() as cur:

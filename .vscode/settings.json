@@ -9,7 +9,8 @@
   "editor.detectIndentation": false,
   "files.exclude": {
     "**/.git": true,
-    "**/env": true
+    "**/env": true,
+    "**/__pycache__": true
   },
   "files.eol": "\n",
   "files.insertFinalNewline": true,
