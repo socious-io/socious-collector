@@ -13,6 +13,10 @@ class IdealistListingJob(ListingsJob(IdealistBaseJob)):
         self.project_type = project_type
 
     @property
+    def job_name(self):
+        return '%s.listings_job.%s' % (self.name, self.project_type)
+
+    @property
     def path(self):
         return '/listings/%s' % self.project_type
 

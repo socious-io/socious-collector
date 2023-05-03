@@ -12,7 +12,6 @@ async def main():
         JOBS += [j.run() for j in module.JOBS]
         print('%s job has been start!' % service)
 
-    # Run multiple NATS listeners.
     await asyncio.gather(*JOBS)
 
 

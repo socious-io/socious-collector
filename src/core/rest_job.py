@@ -27,6 +27,9 @@ class RestJob:
     def method(self):
         return 'GET'
 
+    def get_params(self) -> dict:
+        return {}
+
     def mak_full_url(self):
         return '%s%s' % (self.url, self.path)
 
@@ -38,7 +41,7 @@ class RestJob:
 
     def request(self):
         url = self.mak_full_url()
-        return requests.request(self.method, url, auth=self.auth, headers=self.headers, proxies=self.proxies)
+        return requests.request(self.method, url, auth=self.auth, headers=self.headers, proxies=self.proxies, params=self.get_params())
 
     def fetch(self):
         response = self.request()

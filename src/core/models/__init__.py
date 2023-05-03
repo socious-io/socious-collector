@@ -11,6 +11,10 @@ class BaseEntity:
         return self.row.get('id')
 
     @property
+    def sync_skip_id(self):
+        return True
+
+    @property
     def fetch_query_name(self):
         raise NotImplementedError()
 
@@ -20,6 +24,10 @@ class BaseEntity:
 
     @property
     def sync_query_name(self):
+        raise NotImplementedError()
+
+    @property
+    def new_query_name(self):
         raise NotImplementedError()
 
     @property
@@ -35,10 +43,10 @@ class BaseEntity:
             del (row[key])
         return row
 
-    def to_row(self):
+    def to_row(self, skip_id=True):
         row = []
         for column in self.columns:
-            if column == 'id':
+            if skip_id and column == 'id':
                 continue
             row.append(self.row.get(column, None))
         return row
@@ -47,5 +55,10 @@ class BaseEntity:
         return DB.query(self.fetch_query_name, self.fetch_query_params)[0]
 
     def sync(self):
-        results = DB.query(self.sync_query_name, self.to_row())
+        results = DB.query(self.sync_query_name,
+                           self.to_row(self.sync_skip_id))
+        self.row = results[0]
+
+    def new(self):
+        results = DB.query(self.new_query_name, self.to_row())
         self.row = results[0]
