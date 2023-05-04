@@ -12,6 +12,7 @@ def ListingsJob(Base):
             self.rows = None
             self.load_more = False
             self.last_modified_date = None
+            self.counter = 1
 
         @property
         def runner_timeout(self):
@@ -99,17 +100,24 @@ def ListingsJob(Base):
             return job_entity
 
         async def execute(self):
-            entity = self.calculate_paginate()
+            # entity = self.calculate_paginate()
             self.fetch()
             self.rows = self.filter_result(self.data)
-            self.save_job(entity)
+            self.last_modified_date = self.rows[-1][self.last_modified_field]
+            self.counter += 1
+            # self.save_job(entity)
             await self.process()
-            if self.load_more:
+            if self.counter < self.max_row_count:
                 await self.execute()
+
+        def reset(self):
+            self.counter = 1
+            self.last_modified_date = None
 
         async def run(self):
             while True:
                 await self.execute()
+                self.reset()
                 await asyncio.sleep(self.runner_timeout)
 
     return Job
