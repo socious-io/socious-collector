@@ -6,6 +6,9 @@ from nats.aio.errors import ErrTimeout
 from src.config import config
 
 
+lock = asyncio.Lock()
+
+
 def Queue(Base):
 
     class Q(Base):
@@ -15,7 +18,7 @@ def Queue(Base):
 
         @property
         def worker_count(self):
-            return 3
+            return 1
 
         @property
         def name(self):
@@ -32,10 +35,19 @@ def Queue(Base):
             return None
 
         async def connect(self):
+            if self.nc.is_connected:
+                return
+
             options = {
                 "servers": [config.nats_url],
+                "connect_timeout": 10
             }
-            await self.nc.connect(**options)
+            try:
+                await self.nc.connect(**options)
+                self.connected = True
+            except TimeoutError:
+                await asyncio.sleep(100)
+                await self.connect()
 
         async def subscribe(self):
             await self.nc.subscribe(self.subject, queue=self.name, cb=self.handler)
@@ -82,6 +94,7 @@ def Queue(Base):
                 await asyncio.sleep(1)
 
         async def run(self):
-            await asyncio.gather(*(deepcopy(self).worker() for _ in range(self.worker_count)))
+            workers = [deepcopy(self) for _ in range(self.worker_count)]
+            await asyncio.gather(*(worker.worker() for worker in workers))
 
     return Q

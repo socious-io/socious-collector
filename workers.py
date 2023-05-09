@@ -21,3 +21,6 @@ if __name__ == "__main__":
         asyncio.run(main())
     except KeyboardInterrupt:
         pass
+    finally:
+        loop = asyncio.get_event_loop()
+        loop.close()

@@ -1,6 +1,4 @@
 from . import BaseEntity
-from src.core.db import DB
-from .consts import *
 
 
 class OrganizationEntity(BaseEntity):
@@ -29,6 +27,7 @@ class OrganizationEntity(BaseEntity):
             'address',
             'country',
             'city',
+            'website',
             'other_party_id',
             'other_party_title',
             'other_party_url',

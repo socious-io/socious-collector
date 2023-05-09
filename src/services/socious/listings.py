@@ -1,4 +1,5 @@
 from src.core.queues import Queue
+from src.core.db import DB
 from src.core.models.jobs import JobsEntity
 from src.core.models.organizations import OrganizationEntity
 from src.core.models.media import MediaEntity
@@ -7,11 +8,11 @@ from src.core.models.media import MediaEntity
 class ListingWorker(Queue(object)):
     @property
     def name(self):
-        return 'listings'
+        return 'SOCIOUS.listings'
 
     @property
     def subject(self):
-        return 'listings'
+        return 'SOCIOUS.listings'
 
     def get_id(self):
         return self.row.get('other_party_id')
@@ -22,11 +23,14 @@ class ListingWorker(Queue(object)):
         org_entity = OrganizationEntity(org)
         org_entity.sync()
         if logo:
-            MediaEntity({
+            media = MediaEntity({
                 'identity_id': org_entity.get_id(),
                 'filename': 'logo',
                 'url': logo
-            }).sync()
+            })
+            media.sync()
+            DB.query('update_org_media',
+                     (media.row['id'], org_entity.get_id()))
 
         self.row['identity_id'] = org_entity.get_id()
         job_entity = JobsEntity(self.row)

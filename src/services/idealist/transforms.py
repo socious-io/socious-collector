@@ -73,14 +73,15 @@ def job_transformer(row: dict) -> dict:
 def org_transform(row: dict) -> dict:
     return {
         'name': row.get('name'),
-        'bio': ', '.join(row.get('areasOfFocus', [])).lower().replace('_', ''),
+        'bio': ', '.join(row.get('areasOfFocus') or []).lower().replace('_', ''),
         'logo': row.get('logo'),
         'shortname': get_org_shortname(row),
         'type': 'OTHER',
-        'address': row.get('address', {}).get('full'),
-        'country': row.get('address', {}).get('country'),
-        'city': row.get('address', {}).get('city'),
+        'address': (row.get('address') or {}).get('full'),
+        'country': (row.get('address') or {}).get('country'),
+        'city': (row.get('address') or {}).get('city'),
+        'website': (row.get('url') or {}).get('en'),
         'other_party_id': row.get('id'),
         'other_party_title': 'IDEALIST',
-        'other_party_url': row.get('url', {}).get('en'),
+        'other_party_url': (row.get('url') or {}).get('en'),
     }

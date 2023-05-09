@@ -13,6 +13,8 @@ def ListingsJob(Base):
             self.load_more = False
             self.last_modified_date = None
             self.counter = 1
+            self.limit = 20
+            self.offset = 0
 
         @property
         def runner_timeout(self):
@@ -29,17 +31,22 @@ def ListingsJob(Base):
 
         @property
         def max_row_count(self):
-            return 100
+            return 10
 
         @property
         def job_name(self):
             return '%s.listings_job' % self.name
 
+        def get_last_modified_date(self):
+            if not self.rows:
+                return
+            return self.rows[-1][self.last_modified_field]
+
         def get_params(self):
-            if not self.last_modified_date:
+            if not self.rows:
                 return {}
             return {
-                self.last_modified_field: self.last_modified_date
+                self.last_modified_field: self.get_last_modified_date()
             }
 
         async def dispatch(self, name, row):
@@ -68,8 +75,8 @@ def ListingsJob(Base):
 
             try:
                 entity.fetch()
-            except:
-                pass
+            except Exception as err:
+                print(err)
 
             if entity.row.get('id') and entity.row['fetch_counter'] < self.max_row_count:
                 self.last_modified_date = entity.row['last_modified_date']
@@ -103,11 +110,11 @@ def ListingsJob(Base):
             # entity = self.calculate_paginate()
             self.fetch()
             self.rows = self.filter_result(self.data)
-            self.last_modified_date = self.rows[-1][self.last_modified_field]
             self.counter += 1
+            self.offset += self.limit
             # self.save_job(entity)
             await self.process()
-            if self.counter < self.max_row_count:
+            if self.counter <= self.max_row_count:
                 await self.execute()
 
         def reset(self):

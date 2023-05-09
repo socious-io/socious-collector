@@ -1,6 +1,4 @@
 from . import BaseEntity
-from src.core.db import DB
-from .consts import *
 
 
 class JobsEntity(BaseEntity):

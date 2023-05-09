@@ -6,11 +6,12 @@ INSERT INTO organizations (
   address,
   country,
   city,
+  website,
   other_party_id,
   other_party_title,
   other_party_url
 ) VALUES (
-  %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+  %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
 )
 ON CONFLICT (other_party_id, other_party_title)
 DO UPDATE SET
