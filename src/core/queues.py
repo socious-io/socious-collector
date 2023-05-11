@@ -4,6 +4,7 @@ from copy import deepcopy
 from nats.aio.client import Client as NATS
 from nats.aio.errors import ErrTimeout
 from src.config import config
+from src.utils.datadog import metrics
 
 
 lock = asyncio.Lock()
@@ -63,6 +64,7 @@ def Queue(Base):
         async def handler(self, msg):
             subject = msg.subject
             self.row = json.loads(msg.data.decode())
+            metrics.send(self.subject, points=1)
             print(f"Received a message on '{subject}': {self.get_id()}")
             await self.execute()
 

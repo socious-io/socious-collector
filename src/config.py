@@ -17,6 +17,10 @@ class Config:
             http=os.environ.get('HTTP_PROXY'),
             https=os.environ.get('HTTP_PROXY')
         )
+        self.datadog = dict(
+            api_key=os.environ.get('DATADOG_API_KEY'),
+            app_key=os.environ.get('DATADOG_APP_KEY')
+        )
         # Load settings from the configuration file
         config = ConfigParser()
         config.read("config.ini")

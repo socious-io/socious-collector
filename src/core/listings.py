@@ -1,6 +1,7 @@
 import asyncio
 from datetime import datetime
 from src.core.models.collector_jobs import CollectorJobsEntity
+from src.utils.datadog import metrics
 
 
 def ListingsJob(Base):
@@ -31,7 +32,7 @@ def ListingsJob(Base):
 
         @property
         def max_row_count(self):
-            return 10
+            return 50
 
         @property
         def job_name(self):
@@ -110,6 +111,7 @@ def ListingsJob(Base):
             # entity = self.calculate_paginate()
             self.fetch()
             self.rows = self.filter_result(self.data)
+            metrics.send(self.job_name, points=len(self.rows))
             self.counter += 1
             self.offset += self.limit
             # self.save_job(entity)
