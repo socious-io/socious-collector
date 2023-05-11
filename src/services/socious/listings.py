@@ -36,4 +36,4 @@ class ListingWorker(Queue(object)):
         self.row['identity_id'] = org_entity.get_id()
         job_entity = JobsEntity(self.row)
         job_entity.sync()
-        metrics.send('job_synced', points=1)
+        metrics.send(metric='job_synced', points=1)
