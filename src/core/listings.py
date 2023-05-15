@@ -1,7 +1,7 @@
 import asyncio
 from datetime import datetime
 from src.core.models.collector_jobs import CollectorJobsEntity
-from src.utils.datadog import metrics
+from src.utils.datadog import push_metric
 
 
 def ListingsJob(Base):
@@ -111,7 +111,7 @@ def ListingsJob(Base):
             # entity = self.calculate_paginate()
             self.fetch()
             self.rows = self.filter_result(self.data)
-            metrics.send(metric=self.job_name, points=len(self.rows))
+            push_metric(self.job_name, len(self.rows))
             self.counter += 1
             self.offset += self.limit
             # self.save_job(entity)

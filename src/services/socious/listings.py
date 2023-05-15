@@ -3,7 +3,7 @@ from src.core.db import DB
 from src.core.models.jobs import JobsEntity
 from src.core.models.organizations import OrganizationEntity
 from src.core.models.media import MediaEntity
-from src.utils.datadog import metrics
+from src.utils.datadog import push_metric
 
 
 class ListingWorker(Queue(object)):
@@ -36,4 +36,4 @@ class ListingWorker(Queue(object)):
         self.row['identity_id'] = org_entity.get_id()
         job_entity = JobsEntity(self.row)
         job_entity.sync()
-        metrics.send(metric='job_synced', points=1)
+        push_metric('job_synced', 1)
