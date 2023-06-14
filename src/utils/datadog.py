@@ -12,22 +12,25 @@ api_client = ApiClient(configuration)
 
 
 def push_metric(name, points):
-    body = MetricPayload(
-        series=[
-            MetricSeries(
-                metric=name,
-                type=MetricIntakeType.UNSPECIFIED,
-                points=[
-                    MetricPoint(
-                        timestamp=int(datetime.now().timestamp()),
-                        value=points,
-                    ),
-                ],
-            ),
-        ],
-    )
-    api_instance = MetricsApi(api_client)
-    response = api_instance.submit_metrics(body=body)
-    errors = response.get('errors')
-    if len(errors) > 0:
-        print('datadog metric submit errors : %s' % errors)
+    try:
+        body = MetricPayload(
+            series=[
+                MetricSeries(
+                    metric=name,
+                    type=MetricIntakeType.UNSPECIFIED,
+                    points=[
+                        MetricPoint(
+                            timestamp=int(datetime.now().timestamp()),
+                            value=points,
+                        ),
+                    ],
+                ),
+            ],
+        )
+        api_instance = MetricsApi(api_client)
+        response = api_instance.submit_metrics(body=body)
+        errors = response.get('errors')
+        if len(errors) > 0:
+            print('datadog metric submit errors : %s' % errors)
+    except Exception as err:
+        print(err)
