@@ -41,6 +41,7 @@ class RestJob:
 
     def request(self):
         url = self.mak_full_url()
+        print(f'{url}?{self.get_params()}')
         return requests.request(self.method, url, auth=self.auth, headers=self.headers, proxies=self.proxies, params=self.get_params())
 
     def fetch(self):

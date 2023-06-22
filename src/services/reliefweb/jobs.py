@@ -16,7 +16,8 @@ class ReliefwebListingJob(ListingsJob(ReliefwebBaseJob)):
             'appName': 'socious',
             'profile': 'full',
             'limit': self.limit,
-            'offset': self.offset
+            'offset': self.offset,
+            'sort': 'date:desc'
         }
         return params
 
