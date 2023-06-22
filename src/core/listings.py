@@ -41,7 +41,7 @@ def ListingsJob(Base):
         def get_last_modified_date(self):
             if not self.rows or len(self.rows) < 1:
                 return
-            return self.rows[0][self.last_modified_field]
+            return self.rows[-1][self.last_modified_field]
 
         def get_params(self):
             if not self.rows:
