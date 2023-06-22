@@ -47,7 +47,7 @@ def ListingsJob(Base):
             if not self.rows:
                 return {}
             return {
-                self.last_modified_field: self.get_last_modified_date()
+                self.last_modified_param: self.get_last_modified_date()
             }
 
         async def dispatch(self, name, row):
