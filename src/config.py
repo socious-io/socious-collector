@@ -21,7 +21,6 @@ class Config:
         self.idealist_token = os.environ.get('IDEALIST_TOKEN')
         self.nats_url = os.environ.get('NATS_URL')
         self.database_url = os.environ.get('DATABASE_URL')
-        self.sql_dir = os.path.join(os.getcwd(), 'src/core/sql')
         self.http_proxy = dict(
             http=os.environ.get('HTTP_PROXY'),
             https=os.environ.get('HTTP_PROXY')
@@ -35,6 +34,8 @@ class Config:
         config = ConfigParser()
         config.read(args.config or 'config.ini')
         self.services = config['core']['services'].split(',')
+        self.sql_dir = config['core'].get('sql') or \
+            os.path.join(os.getcwd(), 'src/core/sql')
 
 
 # Initialize a global configuration object
