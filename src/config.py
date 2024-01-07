@@ -32,6 +32,7 @@ class Config:
             app_key=os.environ.get('DD_APP_KEY'),
             api_host='ap1.datadoghq.com'
         )
+        self.serpapi_key = os.environ.get('SERP_API_KEY')
         # Load settings from the configuration file
         config = ConfigParser()
         config.read(args.config or 'config.ini')

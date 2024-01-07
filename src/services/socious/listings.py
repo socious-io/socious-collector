@@ -35,6 +35,8 @@ class ListingWorker(Queue(object)):
 
         self.row['identity_id'] = org_entity.get_id()
         job_entity = JobsEntity(self.row)
+        if job_entity.fetch():
+            return
         job_entity.sync()
         print('%s has been synced' % job_entity.get_id())
         push_metric('job_synced', 1)
