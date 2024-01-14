@@ -11,15 +11,14 @@ async def main():
             continue
         JOBS += [j.run() for j in module.JOBS]
         print('%s job has been start!' % service)
-
     await asyncio.gather(*JOBS)
 
 
 if __name__ == "__main__":
     try:
-      asyncio.run(main())
+        asyncio.run(main())
     except KeyboardInterrupt:
-      pass
+        pass
     finally:
-      loop = asyncio.get_event_loop()
-      loop.close()
+        loop = asyncio.get_event_loop()
+        loop.close()

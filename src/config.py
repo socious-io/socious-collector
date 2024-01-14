@@ -32,6 +32,15 @@ class Config:
             app_key=os.environ.get('DD_APP_KEY'),
             api_host='ap1.datadoghq.com'
         )
+
+        self.adzuna = dict(
+            app_id=os.environ.get('ADZUNA_APP_ID'),
+            app_key=os.environ.get('ADZUNA_APP_KEY'),
+        )
+        self.impact_job_detector = dict(
+            url=os.environ.get('AI_IMPACT_JOB_DETECTOR_URL'),
+            api_key=os.environ.get('AI_IMPACT_JOB_DETECTOR_API_KEY')
+        )
         self.serpapi_key = os.environ.get('SERP_API_KEY')
         # Load settings from the configuration file
         config = ConfigParser()

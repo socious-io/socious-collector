@@ -52,7 +52,10 @@ class BaseEntity:
         return row
 
     def fetch(self):
-        return DB.query(self.fetch_query_name, self.fetch_query_params)[0]
+        results = DB.query(self.fetch_query_name, self.fetch_query_params)
+        if len(results) < 1:
+            return None
+        return results[0]
 
     def sync(self):
         results = DB.query(self.sync_query_name,

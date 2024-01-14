@@ -1,4 +1,7 @@
+import json
+from requests import request
 from src.core.queues import Queue
+from src.config import config
 from src.core.db import DB
 from src.core.models.jobs import JobsEntity
 from src.core.models.organizations import OrganizationEntity
@@ -18,7 +21,25 @@ class ListingWorker(Queue(object)):
     def get_id(self):
         return self.row.get('other_party_id')
 
+    def is_impact(self):
+        if self.row['other_party_title'] in ['IDEALIST', 'RELIEFWEB']:
+            return True
+        data = json.dumps({
+            'query': [{'title': self.row.get('title'), 'description': self.row.get('title')}]
+        })
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        try:
+            res = request('POST', config.impact_job_detector.get(
+                'url'), headers=headers, data=data)
+            return True if res.json().get('predicts', [])[0] else False
+        except Exception as err:
+            print(f'Impact job detector {err} ')
+            return False
+
     async def execute(self):
+        self.row['impact_job'] = self.is_impact()
         org = self.row.get('org')
         logo = org.get('logo')
         org_entity = OrganizationEntity(org)
@@ -36,6 +57,7 @@ class ListingWorker(Queue(object)):
         self.row['identity_id'] = org_entity.get_id()
         job_entity = JobsEntity(self.row)
         if job_entity.fetch():
+            print('%s has been already synced' % job_entity.get_id())
             return
         job_entity.sync()
         print('%s has been synced' % job_entity.get_id())
