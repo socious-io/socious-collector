@@ -22,7 +22,7 @@ class AdzunaListingJob(ListingsJob(AdzunaBaseJob)):
 
     @property
     def max_row_count(self):
-        return 1
+        return 100
 
     @property
     def path(self):
