@@ -6,7 +6,7 @@ def job_transformer(row: dict) -> dict:
     city = None
     if len(area) > 1:
         country = area[0]
-        city = [-1]
+        city = area[1]
 
     contract = row.get('contract_time') or 'FULL_TIME'
     if 'part' in contract.lower():
@@ -26,16 +26,18 @@ def job_transformer(row: dict) -> dict:
         'other_party_title': 'ADZUNA',
         'other_party_url': row.get('redirect_url', ''),
         'updated_at': row.get('created'),
-        'org': org_transform(row)
+        'org': org_transform(row, country, city)
     }
 
 
-def org_transform(row: dict) -> dict:
+def org_transform(row: dict, country, city) -> dict:
     name = row.get('company', {}).get('display_name', '').strip()
     shortname = name.strip().lower().replace(' ', '_')
     return {
         'name': name,
         'shortname': shortname,
         'other_party_id': shortname,
-        'other_party_title': 'ADZUNA'
+        'other_party_title': 'ADZUNA',
+        'country': country,
+        'city': city
     }
