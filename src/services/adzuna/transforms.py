@@ -1,3 +1,4 @@
+from slugify import slugify
 
 
 def job_transformer(row: dict) -> dict:
@@ -32,7 +33,7 @@ def job_transformer(row: dict) -> dict:
 
 def org_transform(row: dict, country, city) -> dict:
     name = row.get('company', {}).get('display_name', '').strip()
-    shortname = name.strip().lower().replace(' ', '_')
+    shortname = slugify(name.strip())
     return {
         'name': name,
         'shortname': shortname,
