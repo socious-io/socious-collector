@@ -125,7 +125,10 @@ def ListingsJob(Base):
 
         async def run(self):
             while True:
-                await self.execute()
+                try:
+                    await self.execute()
+                except Exception as err:
+                    print(err)
                 self.reset()
                 await asyncio.sleep(self.runner_timeout)
 

@@ -80,8 +80,11 @@ def Queue(Base):
             await self.dispatch(transformed)
 
         async def execute(self):
-            self.fetch()
-            await self.process()
+            try:
+                self.fetch()
+                await self.process()
+            except Exception as err:
+                print(err)
 
         async def worker(self):
             await self.connect()
