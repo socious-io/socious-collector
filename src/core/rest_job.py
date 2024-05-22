@@ -20,6 +20,10 @@ class RestJob:
         return None
 
     @property
+    def body(self):
+        return None
+
+    @property
     def headers(self):
         return {}
 
@@ -41,7 +45,7 @@ class RestJob:
 
     def request(self):
         url = self.mak_full_url()
-        return requests.request(self.method, url, auth=self.auth, headers=self.headers, proxies=self.proxies, params=self.get_params())
+        return requests.request(self.method, url, auth=self.auth, headers=self.headers, proxies=self.proxies, params=self.get_params(), data=self.body)
 
     def fetch(self):
         response = self.request()

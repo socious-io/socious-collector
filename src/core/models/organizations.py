@@ -31,4 +31,6 @@ class OrganizationEntity(BaseEntity):
             'other_party_id',
             'other_party_title',
             'other_party_url',
+            'description',
+            'impact_detected'
         )

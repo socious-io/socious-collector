@@ -116,8 +116,12 @@ def ListingsJob(Base):
             self.offset += self.limit
             # self.save_job(entity)
             await self.process()
+            print(f'{self.name} fetching page {self.counter}')
             if self.counter <= self.max_row_count:
-                await self.execute()
+                try:
+                    await self.execute()
+                except Exception as err:
+                    print('error :', err)
 
         def reset(self):
             self.counter = 1
@@ -128,7 +132,7 @@ def ListingsJob(Base):
                 try:
                     await self.execute()
                 except Exception as err:
-                    print(err)
+                    print('error :', err)
                 self.reset()
                 await asyncio.sleep(self.runner_timeout)
 

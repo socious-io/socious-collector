@@ -39,9 +39,14 @@ class Config:
         )
         self.impact_job_detector = dict(
             url=os.environ.get('AI_IMPACT_JOB_DETECTOR_URL'),
-            api_key=os.environ.get('AI_IMPACT_JOB_DETECTOR_API_KEY')
+            api_key=os.environ.get('AI_IMPACT_DETECTOR_API_KEY')
+        )
+        self.impact_org_detector = dict(
+            url=os.environ.get('AI_IMPACT_ORG_DETECTOR_URL'),
+            api_key=os.environ.get('AI_IMPACT_DETECTOR_API_KEY')
         )
         self.serpapi_key = os.environ.get('SERP_API_KEY')
+        self.crunchbase_api_key = os.environ.get('CRUNCHBASE_API_KEY')
         # Load settings from the configuration file
         config = ConfigParser()
         config.read(args.config or 'config.ini')
