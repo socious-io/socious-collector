@@ -1,6 +1,28 @@
 import pycountry
 
 
+themes_to_social_cause = {
+    '4587': 'HUNGER',
+    '49458': 'SUSTAINABLE_COMMUNITIES',
+    '4588': 'CLIMATE_CHANGE',
+    '4590': 'COLLABORATION_FOR_IMPACT',
+    '4591': 'NATURAL_DISASTERS',
+    '4592': 'EDUCATION',
+    '4593': 'HUNGER',
+    '4594': 'GENDER_EQUALITY',
+    '4595': 'HEALTH',
+    '4596': 'HEALTH',
+    '12033': 'PEACE_JUSTICE',
+    '4599': 'PEACEBUILDING',
+    '4600': 'HUMAN_RIGHTS',
+    '4601': 'SUSTAINABLE_COMMUNITIES',
+    '4602': 'SECURITY',
+    '4603': 'SUSTAINABLE_COMMUNITIES',
+    '4604': 'WATER_SANITATION'
+
+}
+
+
 def get_country(row: dict) -> str:
     countries = row.get('country') or []
     if len(countries) < 1:
@@ -40,9 +62,22 @@ def get_exp(row: dict) -> int:
         return 0
 
 
+def get_causes(row: dict):
+    causes = []
+    themes = row.get('theme') or []
+
+    for theme in themes:
+        cause = themes_to_social_cause.get(str(theme.get('id')))
+        if cause is not None and cause not in causes:
+            causes.append(cause)
+
+    return causes
+
+
 def job_transformer(row: dict) -> dict:
     id = row['id']
     row = row['fields']
+
     return {
         'title': row.get('title'),
         'description': row.get('body-html') or row.get('body'),
@@ -54,7 +89,8 @@ def job_transformer(row: dict) -> dict:
         'other_party_title': 'RELIEFWEB',
         'other_party_url': row.get('url'),
         'updated_at': (row.get('date') or {}).get('changed'),
-        'org': org_transform(row.get('source')[0])
+        'org': org_transform(row.get('source')[0]),
+        'causes_tags': get_causes(row)
     }
 
 

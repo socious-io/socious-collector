@@ -1,4 +1,5 @@
 import json
+from psycopg2.extras import Json
 from requests import request
 from src.core.queues import Queue
 from src.config import config
@@ -74,6 +75,10 @@ class ListingWorker(Queue(object)):
         if org_only:
             print('org only has been synced')
             return
+        tags = self.row.get('causes_tags')
+        if tags and len(tags) > 0:
+            self.row['causes_tags'] = '{' + \
+                ",".join([f'{tag}' for tag in tags]) + '}'
         self.row['impact_job'] = self.is_job_impact()
         self.row['identity_id'] = org_entity.get_id()
         job_entity = JobsEntity(self.row)

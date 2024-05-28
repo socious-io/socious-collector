@@ -37,5 +37,6 @@ class JobsEntity(BaseEntity):
             'other_party_title',
             'other_party_url',
             'updated_at',
-            'impact_job'
+            'impact_job',
+            'causes_tags'
         )
