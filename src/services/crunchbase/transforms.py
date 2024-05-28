@@ -42,7 +42,7 @@ def org_transform(row: dict) -> dict:
         'shortname': row.get('identifier').get('permalink'),
         'type': 'OTHER',
         'country': country,
-        'description': row.get('short_description'),
+        'bio': row.get('short_description'),
         'city': city,
         'other_party_id': id,
         'other_party_title': 'CRUNCHBASE',
