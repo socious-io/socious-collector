@@ -20,7 +20,7 @@ def ListingsJob(Base):
         @property
         def runner_timeout(self):
             # 10 minutes
-            return 600
+            return 72000
 
         @property
         def last_modified_field(self):
