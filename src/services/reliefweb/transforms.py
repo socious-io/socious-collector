@@ -90,7 +90,8 @@ def job_transformer(row: dict) -> dict:
         'other_party_url': row.get('url'),
         'updated_at': (row.get('date') or {}).get('changed'),
         'org': org_transform(row.get('source')[0]),
-        'causes_tags': get_causes(row)
+        'causes_tags': get_causes(row),
+        'expires_at': (row.get('date') or {}).get('closing')
     }
 
 

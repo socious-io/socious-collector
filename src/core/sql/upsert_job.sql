@@ -17,9 +17,10 @@ INSERT INTO projects (
   other_party_url,
   updated_at,
   impact_job,
-  causes_tags
+  causes_tags,
+  expires_at
 ) VALUES (
-  %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+  %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
 )
 ON CONFLICT ON CONSTRAINT projects_other_party_id_other_party_title_key
 DO UPDATE SET
@@ -39,6 +40,7 @@ DO UPDATE SET
   other_party_url=COALESCE(EXCLUDED.other_party_url, projects.other_party_url),
   updated_at=COALESCE(EXCLUDED.updated_at, NOW()),
   impact_job=EXCLUDED.impact_job,
-  causes_tags=EXCLUDED.causes_tags
+  causes_tags=EXCLUDED.causes_tags,
+  expires_at=EXCLUDED.expires_at
 
 RETURNING *

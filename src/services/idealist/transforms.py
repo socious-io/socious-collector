@@ -66,7 +66,8 @@ def job_transformer(row: dict) -> dict:
         'other_party_title': 'IDEALIST',
         'other_party_url': row.get('url', {}).get('en'),
         'updated_at': row.get('updated'),
-        'org': org_transform(row.get('org'))
+        'org': org_transform(row.get('org')),
+        'expires_at': row.get('expires')
     }
 
 
