@@ -1,0 +1,21 @@
+# fly.toml - Fly.io configuration for socious-collector
+
+app = "socious-collector"
+primary_region = "sin"  # Singapore - close to APAC (change if needed)
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  # Non-sensitive config (secrets added via `fly secrets set`)
+  SQL_DIR = "/app/src/core/sql"
+
+# This is a worker app, not a web service
+# No HTTP services needed
+[processes]
+  worker = "python jobs.py"
+
+[[vm]]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1
